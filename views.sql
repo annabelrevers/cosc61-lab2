@@ -88,7 +88,32 @@ SELECT FeedbackDate, reviews.ManuscriptId, Title, A_Rating, C_Rating, M_Rating, 
 LEFT JOIN (SELECT Title, ManuscriptId FROM Manuscript) titles
 ON titles.ManuscriptId = reviews.ManuscriptId;
 
-SELECT * FROM ReviewStatus
+SELECT * FROM ReviewStatus;
+
+DROP VIEW IF EXISTS OtherReviewers;
+CREATE VIEW OtherReviewers AS 
+SELECT other_reviewers.ManuscriptId, ReviewerId FROM 
+(SELECT ManuscriptId FROM Review WHERE ReviewerId = ViewRevId()) mans
+LEFT JOIN (SELECT ReviewerId, ManuscriptId FROM Review WHERE ReviewerId != ViewRevId()) other_reviewers
+ON mans.ManuscriptId = other_reviewers.ManuscriptId;
+
+SELECT * FROM OtherReviewers;
+
+DROP VIEW IF EXISTS ReviewerManuscripts;
+CREATE VIEW ReviewerManuscripts AS
+SELECT ManuscriptId AS RManuscripts FROM ReviewStatus;
+
+SELECT * FROM ReviewerManuscripts;
+
+DROP VIEW SoleReviewerManuscript;
+CREATE VIEW SoleReviewerManuscript AS
+SELECT RManuscripts FROM 
+ReviewerManuscripts LEFT JOIN OtherReviewers 
+ON ReviewerManuscripts.RManuscripts = OtherReviewers.ManuscriptId
+WHERE ReviewerId IS NULL;
+
+SELECT * FROM SoleReviewerManuscript;
+
 
 
 

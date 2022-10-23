@@ -218,6 +218,12 @@ VALUES
 INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
 VALUES 
 	(15, 2, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
+VALUES 
+	(13, 1, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
+VALUES 
+	(13, 6, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
 	
 
 
