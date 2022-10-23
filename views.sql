@@ -61,8 +61,34 @@ SELECT ManuscriptId, ManStatus, DateUpdated FROM Manuscript;
 SELECT * FROM WhatsLeft;
 
 # ReviewStatus
+
+
+
+DROP FUNCTION IF EXISTS ViewRevId;
+DELIMITER $$
+CREATE FUNCTION ViewRevId()    
+RETURNS INT
+DETERMINISTIC 
+BEGIN
+# see stackoverflow.com/questions/14511760 and read ALL the info TWICE or MORE.  wh 04/13/2017
+    RETURN @rev_id;
+END$$
+
+DELIMITER ;
+
+SET @rev_id = 13;
+SET @test = ViewRevId();
+SELECT @test;
+
+
 DROP VIEW IF EXISTS ReviewStatus;
-CREATE VIEW ReviewStatus AS
+CREATE VIEW ReviewStatus AS 
+SELECT FeedbackDate, reviews.ManuscriptId, Title, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation FROM 
+(SELECT FeedbackDate, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation FROM Review WHERE ReviewerId = ViewRevId()) reviews
+LEFT JOIN (SELECT Title, ManuscriptId FROM Manuscript) titles
+ON titles.ManuscriptId = reviews.ManuscriptId;
+
+SELECT * FROM ReviewStatus
 
 
 

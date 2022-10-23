@@ -212,6 +212,14 @@ INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Ra
 VALUES 
 	(13, 2, 1, 2, 3, 4, 10, CURRENT_TIMESTAMP),
     (15, 4, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
+VALUES 
+	(13, 4, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
+VALUES 
+	(15, 2, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+	
+
 
 SELECT * FROM Review;
 
@@ -246,7 +254,4 @@ INSERT INTO AuthorGroup (AuthorId, ManuscriptId, OrderNum)
 VALUES 
 	(16, 9, 1);
 
-
 SELECT * FROM AuthorGroup;
-    
-
