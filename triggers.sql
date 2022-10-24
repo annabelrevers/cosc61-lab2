@@ -6,8 +6,8 @@ DELIMITER $$
 CREATE TRIGGER after_manuscript_submit BEFORE INSERT 
 ON Manuscript
     FOR EACH ROW 
-		IF (SELECT COUNT(ICodeId) FROM ICode WHERE ICodeId = NEW.ICodeId = 0) THEN
-             set @msg = concat('LAB2: No reviewers for manuscript id ', cast(NEW.ManuscriptId as char));
+		IF (SELECT COUNT(ICodeId) FROM ReviewerICodeGroup WHERE ICodeId = NEW.ICodeId = 0) THEN
+             set @msg = concat('LAB2: No reviewers for ICode id ', cast(NEW.ICodeId as char));
 			 signal sqlstate '45000' set message_text = @msg;
 		END IF; $$
 DELIMITER ;
@@ -21,37 +21,31 @@ DELIMITER $$
 CREATE TRIGGER delete_reviewer BEFORE DELETE 
 ON Reviewer
     FOR EACH ROW 
-		UPDATE Manuscript
-		SET ManStatus = "Recieved"
-		WHERE  ManuscriptId IN SoleReviewerManuscript
-            
+        BEGIN
+        SET @rev_id = OLD.ReviewerId;
         
-		END IF; $$
+        IF (SELECT EXISTS(SELECT 1 FROM ExistReviewersWithICode)) THEN
+			UPDATE 
+				Manuscript M, 
+				ExistReviewersWithICode Acc
+			SET M.ManStatus = "Recieved"
+			WHERE M.ManuscriptId  = Acc.ManuscriptId;
+		END IF;
+        
+        IF (SELECT EXISTS(SELECT 1 FROM NoOtherReviewersWithICode)) THEN
+			UPDATE 
+				Manuscript M, 
+				NoOtherReviewersWithICode Rej
+			SET M.ManStatus = "Rejected"
+			WHERE M.ManuscriptId  = Rej.ManuscriptId;
+		END IF;
+		
+        DELETE FROM Review WHERE ReviewerId = OLD.ReviewerId;
+        DELETE FROM ReviewerICodeGroup WHERE ReviewerId = OLD.ReviewerId;
+        END$$
+		
         
 DELIMITER ;
-SELECT * FROM SoleReviewerManuscript;
-SELECT * FROM ReviewQueue;
-
-SELECT ManuscriptId, ReviewerId FROM Review;
-
-
-SELECT * FROM Review;
-SELECT ManuscriptId
-SELECT ManuscriptId, ifnull(reviewerCount, 0) as reviewerCount
-from Manuscript
-LEFT JOIN 
-	(Select  ICode.ICodeId, count(*) as reviewerCount 
-	FROM ICode
-	 LEFT JOIN ReviewerICodeGroup on ICode.ICodeId = ReviewerICodeGroup.ICodeId
-	 LEFT JOIN Reviewer on Reviewer.ReviewerId = ReviewerICodeGroup.ReviewerId
-	GROUP BY ICodeId
-	) as numReviewers
-     on numReviewers.ICodeId = Manuscript.ICodeId;
-
-SELECT m.ManuscriptId FROM 
-(SELECT ManuscriptId FROM Review WHERE (ReviewerId = 13 AND (SELECT COUNT(ManuscriptId) FROM Review WHERE ReviewerId = 13 = 1)) m
-LEFT JOIN (SELECT * FROM Manuscript) mans
-ON m.ManuscriptId = mans.ManuscriptId;
 
 
 # Trigger #3 

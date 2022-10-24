@@ -124,8 +124,15 @@ VALUES
   ("What lives in a pond",78,"Published"),
   ("Cabins for dummies",57,"Ready"),
   ("Fun sample title",15,"Rejected"),
-  ("Sock wrestling",16,"Typesetting"),
-  ("Random loud noise",44,"Rejected");
+  ("Sock wrestling",16,"Typesetting");
+INSERT INTO Manuscript (Title, PageCount, ICodeId, ManStatus)
+VALUES
+ ("Random loud noise",44, 4, "Recieved");
+INSERT INTO Manuscript (Title, PageCount, ICodeId, ManStatus)
+VALUES
+  ("Two hours to go", 15, 7, "Recieved");
+
+
 INSERT INTO Manuscript (Title, PageCount, ManStatus)
 VALUES
   ("gang",82,"Rejected"),
@@ -154,7 +161,6 @@ VALUES
   ("I have a headache", 4, 7, 2, 10, 61,"Recieved"),
   ("happy weekend", 3, 15, 3, 3, 72,"Typesetting"),
   ("scrubbin and tubbin", 5, 2, 1, 71, 10,"Ready");
-  
 SELECT * FROM Manuscript;
 
 # Insert Reviewer
@@ -224,9 +230,11 @@ VALUES
 INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
 VALUES 
 	(13, 6, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+INSERT INTO Review (ReviewerId, ManuscriptId, A_Rating, C_Rating, M_Rating, E_Rating, Recommendation, FeedbackDate)
+VALUES 
+	(13, 7, 2, 3, 4, 5, 0, CURRENT_TIMESTAMP);
+
 	
-
-
 SELECT * FROM Review;
 
 # ReviewerICodeGroup

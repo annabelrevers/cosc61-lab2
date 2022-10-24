@@ -90,6 +90,10 @@ ON titles.ManuscriptId = reviews.ManuscriptId;
 
 SELECT * FROM ReviewStatus;
 
+# HELPER VIEWS FOR TRIGGER 2
+
+# OtherReviewers
+
 DROP VIEW IF EXISTS OtherReviewers;
 CREATE VIEW OtherReviewers AS 
 SELECT other_reviewers.ManuscriptId, ReviewerId FROM 
@@ -99,13 +103,17 @@ ON mans.ManuscriptId = other_reviewers.ManuscriptId;
 
 SELECT * FROM OtherReviewers;
 
+# ReviewerManuscripts
+
 DROP VIEW IF EXISTS ReviewerManuscripts;
 CREATE VIEW ReviewerManuscripts AS
 SELECT ManuscriptId AS RManuscripts FROM ReviewStatus;
 
 SELECT * FROM ReviewerManuscripts;
 
-DROP VIEW SoleReviewerManuscript;
+# SoleReviewerManuscript
+
+DROP VIEW IF EXISTS SoleReviewerManuscript;
 CREATE VIEW SoleReviewerManuscript AS
 SELECT RManuscripts FROM 
 ReviewerManuscripts LEFT JOIN OtherReviewers 
@@ -113,6 +121,36 @@ ON ReviewerManuscripts.RManuscripts = OtherReviewers.ManuscriptId
 WHERE ReviewerId IS NULL;
 
 SELECT * FROM SoleReviewerManuscript;
+
+DROP VIEW IF EXISTS SoleICodeView;
+CREATE VIEW SoleICodeView AS
+SELECT ICodeId, ManuscriptId FROM 
+SoleReviewerManuscript LEFT JOIN Manuscript
+ON SoleReviewerManuscript.RManuscripts = Manuscript.ManuscriptId;
+
+SELECT * FROM SoleICodeView;
+
+DROP VIEW IF EXISTS NoOtherReviewersWithICode;
+CREATE VIEW NoOtherReviewersWithICode AS 
+SELECT SoleICodeView.ICodeId, ReviewerId, ManuscriptId FROM 
+SoleICodeView LEFT JOIN ReviewerICodeGroup 
+ON SoleICodeView.ICodeId = ReviewerICodeGroup.ICodeId
+WHERE ReviewerId IS NULL;
+
+SELECT * FROM NoOtherReviewersWithICode;
+
+DROP VIEW IF EXISTS ExistReviewersWithICode;
+CREATE VIEW ExistReviewersWithICode AS 
+SELECT SoleICodeView.ICodeId, ReviewerId, ManuscriptId FROM 
+SoleICodeView LEFT JOIN ReviewerICodeGroup 
+ON SoleICodeView.ICodeId = ReviewerICodeGroup.ICodeId
+WHERE ReviewerId IS NOT NULL;
+
+SELECT * FROM ExistReviewersWithICode;
+
+DROP VIEW 
+
+
 
 
 
