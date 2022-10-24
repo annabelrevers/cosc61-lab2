@@ -10,19 +10,11 @@ DROP TABLE IF EXISTS ReviewerICodeGroup;
 DROP TABLE IF EXISTS Reviewer;
 DROP TABLE IF EXISTS ICode;
 
-
-/* 
- * SQL scripts for CS61 Intro to SQL lectures
- * FILENAME SOCCER.SQL
- */
-
 CREATE TABLE 	ICode 
   ( ICodeId   		int NOT NULL AUTO_INCREMENT,
     InterestName   	varchar(100) NOT NULL,
     PRIMARY KEY (ICodeId)
   );
-  
-
 
 CREATE TABLE 	Editor 
   ( EditorId   		int NOT NULL AUTO_INCREMENT,
@@ -30,7 +22,6 @@ CREATE TABLE 	Editor
     EditorLastName  varchar(100) NOT NULL,
     PRIMARY KEY (EditorId)
   );
-
 
 CREATE TABLE 	Issue 
   ( IssueId   		int NOT NULL AUTO_INCREMENT,
@@ -41,7 +32,7 @@ CREATE TABLE 	Issue
     PRIMARY KEY (IssueId)
   );
   
-  CREATE TABLE 	Manuscript 
+CREATE TABLE 	Manuscript 
   ( ManuscriptId   	int AUTO_INCREMENT,
     Title   		varchar(100) NOT NULL,
     DateRecieved    datetime DEFAULT CURRENT_TIMESTAMP, 
@@ -58,7 +49,7 @@ CREATE TABLE 	Issue
     FOREIGN KEY (IssueId) REFERENCES Issue(IssueId)
   );
   
-  CREATE TABLE Author
+CREATE TABLE Author
   ( AuthorId		int AUTO_INCREMENT,
 	AuthorFirstName	varchar(45) NOT NULL,
     AuthorLastName	varchar(45) NOT NULL,
@@ -67,7 +58,7 @@ CREATE TABLE 	Issue
     PRIMARY KEY (AuthorId)
 	);
   
-  CREATE TABLE AuthorGroup
+CREATE TABLE AuthorGroup
   ( ManuscriptId	int NOT NULL,
 	AuthorId		int NOT NULL,
     OrderNum		int NOT NULL,
@@ -85,14 +76,13 @@ CREATE TABLE Reviewer
     PRIMARY KEY (ReviewerId)
 	);
 
- CREATE TABLE ReviewerICodeGroup
+CREATE TABLE ReviewerICodeGroup
   ( ReviewerId		int NOT NULL,
 	ICodeId			int NOT NULL,
     PRIMARY KEY (ReviewerId, ICodeId), 
     FOREIGN KEY (ReviewerId) REFERENCES Reviewer(ReviewerId),
     FOREIGN KEY (ICodeId) REFERENCES ICode(ICodeId)
 	);
-
 
 CREATE TABLE Review
   ( ReviewerId		int NOT NULL,
